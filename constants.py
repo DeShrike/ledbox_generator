@@ -90,3 +90,13 @@ TEXT_XML = """
            y="{{Y}}"
            style="stroke-width:0.1">{{TEXT}}</tspan></text>
 """
+
+ELLIPSE_XML = """
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#{{COLOR}};stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none"
+       id="{{ID}}"
+       cx="{{X}}"
+       cy="{{Y}}"
+       rx="{{R}}"
+       ry="{{R}}" />
+"""

@@ -6,6 +6,7 @@ class Group():
 		self.paths = []	
 		self.groups = []
 		self.texts = []
+		self.ellipses = []
 		self.id = id
 
 	def write_to_file(self, fd):
@@ -20,7 +21,12 @@ class Group():
 			g.write_to_file(fd)
 		for t in self.texts:
 			t.write_to_file(fd)
+		for e in self.ellipses:
+			e.write_to_file(fd)
 		fd.write(constants.GROUP_END)
 
 	def add_path(self, path):
 		self.paths.append(path)
+
+	def add_ellipse(self, ellipse):
+		self.ellipses.append(ellipse)

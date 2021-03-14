@@ -42,7 +42,7 @@ class Path():
 				x = node[ixx]
 				data += f" H {x}"
 			else:
-				print("Oops")
+				data += f" L {x},{y}"
 
 		if self.closed:
 			data = data + " Z"
