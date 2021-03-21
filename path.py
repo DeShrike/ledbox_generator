@@ -25,24 +25,30 @@ class Path():
 	def last_y(self) -> float:
 		return self.nodes[-1][1]
 
+	def format_number(self, num:float) -> str:
+		s = f"{float(num):.6f}"
+		return s
+
 	def generate_svg_path(self) -> str:
 		data = ""
 		ixx = 1 if self.flip_xy else 0
 		ixy = 0 if self.flip_xy else 1
 		x = self.nodes[0][ixx]
 		y = self.nodes[0][ixy]
-		data += f"M {x},{y}"
+		data += f"M {self.format_number(x)},{self.format_number(y)}"
 		for node in self.nodes[1:]:
 			dx = node[ixx] - x
 			dy = node[ixy] - y
 			if dx == 0 and dy != 0:
 				y = node[ixy]
-				data += f" V {y}"
+				data += f" V {self.format_number(y)}"
 			elif dx != 0 and dy == 0:
 				x = node[ixx]
-				data += f" H {x}"
+				data += f" H {self.format_number(x)}"
 			else:
-				data += f" L {x},{y}"
+				x = node[ixx]
+				y = node[ixy]
+				data += f" L {self.format_number(x)},{self.format_number(y)}"
 
 		if self.closed:
 			data = data + " Z"

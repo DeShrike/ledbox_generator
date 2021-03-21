@@ -28,11 +28,14 @@ def generate_top_plate(root):
     bholes = Group("big_holes")
     root.groups.append(bholes)
 
-    holew = GRID_PART_WIDTH - (2 * LIP_WIDTH)
-    holeh = GRID_PART_HEIGHT - (2 * LIP_WIDTH)
+    overhang = LIP_WIDTH
+    holew = GRID_PART_WIDTH - (2 * overhang)
+    holeh = GRID_PART_HEIGHT - (2 * overhang)
     for xx in range(GRID_W):
         for yy in range(GRID_H):
-            x = (xx * (GRID_PART_WIDTH + THICKNESS)) + LIP_WIDTH + THICKNESS + LIP_WIDTH
-            y = (yy * (GRID_PART_HEIGHT + THICKNESS)) + LIP_WIDTH + THICKNESS + LIP_WIDTH
-            hole = create_hole(OFFSETX + x, OFFSETY + y, holew, holeh, f"bhole_{x}_{y}")
+            x = (xx * (GRID_PART_WIDTH + THICKNESS)) + overhang + THICKNESS * 2
+            y = (yy * (GRID_PART_HEIGHT + THICKNESS)) + overhang + THICKNESS * 2
+
+            hole = create_rounded_box(OFFSETX + x, OFFSETY + y, holew, holeh, 2)
+            #hole = create_hole(OFFSETX + x, OFFSETY + y, holew, holeh, f"bhole_{x}_{y}")
             bholes.add_path(hole)

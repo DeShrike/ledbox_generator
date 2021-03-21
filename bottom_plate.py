@@ -22,6 +22,10 @@ def add_outline(root):
     outline = Group("outline")
     root.groups.append(outline)
 
+    p = create_rounded_box(OFFSETX, OFFSETY, width, height, 2)
+    outline.add_path(p)
+    
+    """
     p = Path("outer_border", True)
     p.color = constants.RED
     outline.add_path(p)
@@ -34,6 +38,7 @@ def add_outline(root):
     p.add_node(OFFSETX + width, OFFSETY + height)
     # bottom left
     p.add_node(OFFSETX + 0, OFFSETY + height)
+    """
 
 def add_indicator_crosses(root):
     crosses = Group("crosses")

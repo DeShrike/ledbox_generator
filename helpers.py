@@ -2,25 +2,84 @@ from group import Group
 from path import Path
 from text import Text
 import constants
+import math
 
 #######################################################################################
 # Helpers
 #######################################################################################
 
-def create_line(x1:int, y1:int, x2:int, y2:int, id:str):
+def create_line(x1:float, y1:float, x2:float, y2:float, id:str):
     p = Path(id, False)
     p.color = constants.MAGENTA
     p.add_node(x1, y1)
     p.add_node(x2, y2)
     return p
 
-def create_hole(x1:int, y1:int, w:int, h:int, id:str):
+def create_hole(x1:float, y1:float, w:float, h:float, id:str):
     p = Path(id, True)
     p.color = constants.GREEN
     p.add_node(x1, y1)
     p.add_node(x1 + w, y1)
     p.add_node(x1 + w, y1 + h)
     p.add_node(x1, y1 + h)
+    return p
+
+def add_rounded_corner(path, x:float, y:float, r:float, corner:str):
+    if corner == "TL":
+        start_angle = math.pi + (math.pi / 2)
+        end_angle = math.pi / 2 + (math.pi / 2)
+        cx = x + r
+        cy = y + r
+    elif corner == "TR":
+        start_angle = math.pi / 2 + (math.pi / 2)
+        end_angle = 0 + (math.pi / 2)
+        cx = x - r
+        cy = y + r
+    elif corner == "BR":
+        start_angle = 0 + (math.pi / 2)
+        end_angle = -math.pi / 2 + (math.pi / 2)
+        cx = x - r
+        cy = y - r
+    elif corner == "BL":
+        start_angle = -math.pi / 2 + (math.pi / 2)
+        end_angle = -math.pi + (math.pi / 2)
+        cx = x + r
+        cy = y - r
+
+    a = start_angle
+    steps = 8
+    step = (math.pi / 2) / steps
+    while a > end_angle:
+        xx = math.sin(a) * r + cx
+        yy = math.cos(a) * r + cy
+        path.add_node(xx, yy)
+        a -= step
+
+    a = end_angle
+    xx = math.sin(a) * r + cx
+    yy = math.cos(a) * r + cy
+    path.add_node(xx, yy)
+
+def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3):
+    p = Path(f"rounded_box_{x}_{y}", True)
+    p.color = constants.RED
+
+    add_rounded_corner(p, x + 0, y + 0, rounding, "TL")
+    #p.add_node(x + 0, y + 0 + rounding)
+    #p.add_node(x + 0 + rounding, y + 0)
+
+    add_rounded_corner(p, x + w, y + 0, rounding, "TR")
+    #p.add_node(x + w - rounding, y + 0)
+    #p.add_node(x + w, y + 0 + rounding)
+
+    add_rounded_corner(p, x + w, y + h, rounding, "BR")
+    #p.add_node(x + w, y + h - rounding)
+    #p.add_node(x + w - rounding, y + h)
+
+    add_rounded_corner(p, x + 0, y + h, rounding, "BL")
+    #p.add_node(x + 0 + rounding, y + h)
+    #p.add_node(x + 0, y + h - rounding)
+
     return p
 
 def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int):
