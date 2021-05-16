@@ -75,6 +75,7 @@ PATH_XML = """
     <path
        id="{{ID}}"
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#{{COLOR}};stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       fill="none" stroke="#{{COLOR}}"
        d="{{DATA}}"
        sodipodi:nodetypes="{{NODETYPES}}" />
 """
@@ -83,6 +84,7 @@ TEXT_XML = """
       <text xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:6px;line-height:1;font-family:sans-serif;fill:#{{COLOR}};fill-opacity:1;stroke:none;stroke-width:0.1"
          x="{{X}}" y="{{Y}}"
+         stroke="none" fill="#{{COLOR}}"
          id="{{ID}}"><tspan
            sodipodi:role="line"
            id="{{ID}}"
@@ -94,6 +96,7 @@ TEXT_XML = """
 ELLIPSE_XML = """
     <ellipse
        style="fill:none;fill-opacity:1;stroke:#{{COLOR}};stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none"
+       fill="none" stroke="#{{COLOR}}"
        id="{{ID}}"
        cx="{{X}}"
        cy="{{Y}}"
