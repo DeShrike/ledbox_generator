@@ -10,7 +10,7 @@ import math
 
 def create_line(x1:float, y1:float, x2:float, y2:float, id:str):
     p = Path(id, False)
-    p.color = constants.MAGENTA
+    p.color = constants.RED
     p.add_node(x1, y1)
     p.add_node(x2, y2)
     return p
@@ -60,9 +60,9 @@ def add_rounded_corner(path, x:float, y:float, r:float, corner:str):
     yy = math.cos(a) * r + cy
     path.add_node(xx, yy)
 
-def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3):
+def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3, color:str = constants.MAGENTA):
     p = Path(f"rounded_box_{x}_{y}", True)
-    p.color = constants.RED
+    p.color = color
 
     add_rounded_corner(p, x + 0, y + 0, rounding, "TL")
     #p.add_node(x + 0, y + 0 + rounding)
@@ -125,13 +125,13 @@ def add_text(root, name:str):
     root.groups.append(g)
     t = Text(50, 40, constants.BLACK,   name)
     g.texts.append(t)
-    t = Text(50, 45, constants.RED,     "Red: Cut")
+    t = Text(50, 45, constants.RED,     "Red: Etch")
     g.texts.append(t)
-    t = Text(50, 50, constants.GREEN,   "Green: Cut")
+    t = Text(50, 50, constants.BLUE,    "Blue: Cut")
     g.texts.append(t)
-    t = Text(50, 55, constants.BLUE,    "Blue: Cut")
+    t = Text(50, 55, constants.GREEN,   "Green: Cut")
     g.texts.append(t)
-    t = Text(50, 60, constants.MAGENTA, "Magenta: Etch")
+    t = Text(50, 60, constants.MAGENTA, "Magenta: Cut")
     g.texts.append(t)
 
 def save(root, filename, id, w:int, h:int):

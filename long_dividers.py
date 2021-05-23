@@ -51,7 +51,7 @@ def add_long_divider(root, extra_offset_y:int = 0):
     root.groups.append(div)
 
     p = Path("div", True)
-    p.color = constants.RED
+    p.color = constants.MAGENTA
     div.add_path(p)
 
     # top left
@@ -72,7 +72,7 @@ def add_long_divider(root, extra_offset_y:int = 0):
     # bottom left
     p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
 
-def generate_long_dividers(root):
+def generate_horizontal_dividers(root):
     spacing = BOX_INNER_DEPTH + 6
     for i in range(HORIZONTAL_DIVIDER_COUNT):
         add_long_divider(root, spacing * i)

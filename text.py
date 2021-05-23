@@ -10,6 +10,7 @@ class Text():
 		self.id = str(uuid.uuid4())
 
 	def write_to_file(self, fd):
+		print(f"Writing: {self.id}")
 		xml = constants.TEXT_XML
 		xml = xml.replace("{{ID}}", self.id)
 		xml = xml.replace("{{X}}", str(self.x))

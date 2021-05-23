@@ -51,7 +51,7 @@ def add_short_divider(root, extra_offset_y:int = 0):
 
     p = Path("div", True)
     p.flip_xy = True
-    p.color = constants.RED
+    p.color = constants.MAGENTA
     div.add_path(p)
 
     # top left
@@ -71,7 +71,7 @@ def add_short_divider(root, extra_offset_y:int = 0):
     # bottom left
     p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
 
-def generate_short_dividers(root):
+def generate_vertical_dividers(root):
     spacing = BOX_INNER_DEPTH + 4
     for i in range(VERTICAL_DIVIDER_COUNT):
         add_short_divider(root, spacing * i)

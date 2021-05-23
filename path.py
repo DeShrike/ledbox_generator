@@ -11,6 +11,7 @@ class Path():
 	def write_to_file(self, fd):
 		if len(self.nodes) == 0:
 			return
+		print(f"Writing: {self.id}")
 		xml = constants.PATH_XML
 		xml = xml.replace("{{ID}}", self.id)
 		xml = xml.replace("{{COLOR}}", self.color)
@@ -53,7 +54,7 @@ class Path():
 		if self.closed:
 			data = data + " Z"
 
-		print(data)
+		# print(data)
 		return data
 
 	def add_node(self, x:float, y:float):

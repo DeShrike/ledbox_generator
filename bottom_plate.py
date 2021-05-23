@@ -22,12 +22,12 @@ def add_outline(root):
     outline = Group("outline")
     root.groups.append(outline)
 
-    p = create_rounded_box(OFFSETX, OFFSETY, width, height, 2)
+    p = create_rounded_box(OFFSETX, OFFSETY, width, height, 6)
     outline.add_path(p)
     
     """
     p = Path("outer_border", True)
-    p.color = constants.RED
+    p.color = constants.MAGENTA2
     outline.add_path(p)
 
     # top left
@@ -94,23 +94,25 @@ def add_side_pin_holes(root):
     pholes = Group("side_pin_holes")
     root.groups.append(pholes)
 
+    delta = (PIN_WIDTH - THICKNESS) / 2  # To compensate for the fact that PIN_WIDTH is thicker than THICKNESS
+
     # Top & Bottom
     for xx in range(GRID_W):
-        y = LIP_WIDTH
+        y = LIP_WIDTH - delta
         x = LIP_WIDTH + (xx * (THICKNESS + GRID_PART_WIDTH)) + THICKNESS + ((GRID_PART_WIDTH - PIN_SIZE) / 2)
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_SIZE, PIN_WIDTH, f"pinhole_top_{xx}")
         pholes.add_path(h)
-        y = LIP_WIDTH + VERTICAL_DIVIDER_LENGTH + THICKNESS
+        y = LIP_WIDTH + VERTICAL_DIVIDER_LENGTH + THICKNESS - delta
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_SIZE, PIN_WIDTH, f"pinhole_bottom_{xx}")
         pholes.add_path(h)
 
     # Left & Right
     for yy in range(GRID_H):
-        x = LIP_WIDTH
+        x = LIP_WIDTH - delta
         y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT)) + THICKNESS + ((GRID_PART_HEIGHT - PIN_SIZE) / 2)
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"pinhole_left_{yy}")
         pholes.add_path(h)
-        x = LIP_WIDTH + HORIZONTAL_DIVIDER_LENGTH + THICKNESS
+        x = LIP_WIDTH + HORIZONTAL_DIVIDER_LENGTH + THICKNESS - delta
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"pinhole_right_{yy}")
         pholes.add_path(h)
 
@@ -118,10 +120,12 @@ def add_center_horizontal_pin_holes(root, no_firstandlast_hole:bool = False):
     choles = Group("horizontal_center_pin_holes")
     root.groups.append(choles)
 
+    delta = (PIN_WIDTH - THICKNESS) / 2  # To compensate for the fact that PIN_WIDTH is thicker than THICKNESS
+
     # Center
     for yy in range(1, GRID_H):
 
-        y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT))
+        y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT)) - delta
         for xx in range(GRID_W):
             if no_firstandlast_hole and (xx == 0 or xx == GRID_W - 1):
                 continue
@@ -134,9 +138,11 @@ def add_center_vertical_pin_holes(root):
     choles = Group("vertical_center_pin_holes")
     root.groups.append(choles)
 
+    delta = (PIN_WIDTH - THICKNESS) / 2  # To compensate for the fact that PIN_WIDTH is thicker than THICKNESS
+
     # Center
     for xx in range(1, GRID_W):
-        x = LIP_WIDTH + (xx * (THICKNESS + GRID_PART_WIDTH))
+        x = LIP_WIDTH + (xx * (THICKNESS + GRID_PART_WIDTH)) - delta
         for yy in range(GRID_H):
             y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT)) + THICKNESS + ((GRID_PART_HEIGHT - PIN_SIZE) / 2)
             h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"v_pinhole_left_{xx}_{yy}")
