@@ -12,7 +12,7 @@ class Layer():
 	def write_to_file(self, fd):
 		if len(self.groups) + len(self.paths) + len(self.texts) == 0:
 			return
-		print(f"Writing: {self.id}")
+		print(f"  Writing Layer: {self.name} {self.id}")
 		header = constants.LAYER_START
 		header = header.replace("{{NAME}}", self.name)
 		header = header.replace("{{ID}}", self.id)

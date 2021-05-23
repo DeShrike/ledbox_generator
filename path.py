@@ -11,7 +11,7 @@ class Path():
 	def write_to_file(self, fd):
 		if len(self.nodes) == 0:
 			return
-		print(f"Writing: {self.id}")
+		# print(f"Writing: {self.id}")
 		xml = constants.PATH_XML
 		xml = xml.replace("{{ID}}", self.id)
 		xml = xml.replace("{{COLOR}}", self.color)

@@ -91,7 +91,7 @@ def add_plastic_covers(root, extra_offset_x:int, extra_offset_y:int):
     offsetx = OFFSETX + extra_offset_x
     offsety = OFFSETY + extra_offset_y
 
-    plastic = Group(f"plastic_{extra_offset_x}")
+    plastic = Group(f"plastic_{extra_offset_x}_{extra_offset_y}")
     root.groups.append(plastic)
 
     w = GRID_PART_WIDTH - 1

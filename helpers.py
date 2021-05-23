@@ -120,6 +120,41 @@ def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float
         path.add_node(x, y)
         x -= (thickness / 2.0) * direction
 
+def add_horz_pins_ex(path, x:float, y:float, count:int, spacing:float, data, direction:int, slid_data = None):
+    # adds pins on a horizontal line
+    # x, y: start point
+    # count: numbers of pins
+    # spacing: distance between stub centers
+    # indent: size of pin (depth)
+    # thickness: thickness of pin (width)
+    # direction: 1 or -1: x-direction
+    for ix in range(count):
+        indent = data[ix][0]
+        thickness = data[ix][1]
+
+        if slid_data is not None and ix > 0:
+            slid_width = slid_data[1]
+            slid_depth = slid_data[0]
+            dx = spacing / 2
+            sx = x + ((dx - (slid_width / 2)) * direction)
+            path.add_node(sx, y)
+            y += slid_depth
+            path.add_node(sx, y)
+            sx += slid_width * direction
+            path.add_node(sx, y)
+            y -= slid_depth
+            path.add_node(sx, y)
+
+        x += (spacing - (thickness / 2.0)) * direction
+        path.add_node(x, y)
+        y += indent
+        path.add_node(x, y)
+        x += thickness * direction
+        path.add_node(x, y)
+        y -= indent
+        path.add_node(x, y)
+        x -= (thickness / 2.0) * direction
+
 def add_text(root, name:str):
     g = Group("legend")
     root.groups.append(g)
@@ -135,6 +170,7 @@ def add_text(root, name:str):
     g.texts.append(t)
 
 def save(root, filename, id, w:int, h:int):
+    print(f"Writing file {filename}")
     with open(filename, "w") as fd:
         header = constants.SVG_START
         header = header.replace("{{FILENAME}}", filename)

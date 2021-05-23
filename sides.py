@@ -7,33 +7,33 @@ import constants
 OFFSETX = 10
 OFFSETY = 10
 
-def add_long_side(root, extra_offset_y:int = 0):
+def add_horizontal_side(root, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
     height = DIVIDER_HEIGHT
-    side = Group("long_side")
+    side = Group("horizontal_side")
     root.groups.append(side)
 
-    p = Path("side", True)
+    p = Path("horizontal_side_outline", True)
     p.color = constants.MAGENTA
     side.add_path(p)
 
     # top left
     p.add_node(OFFSETX + 0,     OFFSETY + 0 + extra_offset_y)
-    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, -PIN_WIDTH, PIN_SIZE, 1)
+    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, -PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # top right
     p.add_node(OFFSETX + width, OFFSETY + 0 + extra_offset_y)
-    add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, PIN_WIDTH, PIN_SIZE, 1)
+    add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # bottom right
     p.add_node(OFFSETX + width, OFFSETY + height + extra_offset_y)
-    add_horz_pins(p, p.last_x() + (GRID_PART_WIDTH / 2) + THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_WIDTH, PIN_SIZE, -1)
+    add_horz_pins(p, p.last_x() + (GRID_PART_WIDTH / 2) + THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, -1)
     
     # bottom left
     p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
-    add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_WIDTH, PIN_SIZE, -1)
+    add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines")
+    lines = Group("indicatorlines_horizontal_side")
     side.groups.append(lines)
 
     for xx in range(1, GRID_W):
@@ -46,19 +46,19 @@ def add_long_side(root, extra_offset_y:int = 0):
         l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
         lines.add_path(l)
 
-def add_short_side(root, extra_offset_y:int = 0):
+def add_vertical_side(root, extra_offset_y:int = 0):
     width = VERTICAL_DIVIDER_LENGTH + (2 * THICKNESS)
     height = DIVIDER_HEIGHT
-    side = Group("short_side")
+    side = Group("vertical_side")
     root.groups.append(side)
 
-    p = Path("side", True)
+    p = Path("vertical_side_outline", True)
     p.color = constants.MAGENTA
     side.add_path(p)
 
     # top left
     p.add_node(OFFSETX + 0,     OFFSETY + 0 + extra_offset_y)
-    add_horz_pins(p, p.last_x() - (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, -PIN_WIDTH, PIN_SIZE, 1)
+    add_horz_pins(p, p.last_x() - (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, -PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # top right
     p.add_node(OFFSETX + width, OFFSETY + 0 + extra_offset_y)
@@ -66,13 +66,13 @@ def add_short_side(root, extra_offset_y:int = 0):
 
     # bottom right
     p.add_node(OFFSETX + width, OFFSETY + height + extra_offset_y)
-    add_horz_pins(p, p.last_x() + (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, PIN_WIDTH, PIN_SIZE, -1)
+    add_horz_pins(p, p.last_x() + (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, -1)
     
     # bottom left
     p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
     add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, PIN_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines")
+    lines = Group("indicatorlines_vertical_side")
     side.groups.append(lines)
 
     for xx in range(1, GRID_H):
@@ -88,8 +88,8 @@ def add_short_side(root, extra_offset_y:int = 0):
 
 def generate_sides(root):
     spacing = BOX_INNER_DEPTH + 10
-    add_long_side(root)
-    add_long_side(root, spacing * 1)
-    add_short_side(root, spacing * 2)
-    add_short_side(root, spacing * 3)
+    add_vertical_side(root)
+    add_vertical_side(root, spacing * 1)
+    add_horizontal_side(root, spacing * 2)
+    add_horizontal_side(root, spacing * 3)
 

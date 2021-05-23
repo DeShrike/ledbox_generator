@@ -12,7 +12,7 @@ class Group():
 	def write_to_file(self, fd):
 		if len(self.groups) + len(self.paths) + len(self.texts) + len(self.ellipses) == 0:
 			return
-		print(f"Writing: {self.id}")
+		print(f"  Writing Group: {self.id}")
 		header = constants.GROUP_START
 		header = header.replace("{{ID}}", self.id)
 		fd.write(header)

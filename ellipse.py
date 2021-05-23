@@ -7,10 +7,10 @@ class Ellipse():
 		self.y = y
 		self.r = r
 		self.color = color
-		self.id = str(uuid.uuid4())
+		self.id = "ellipse_" + str(uuid.uuid4())
 
 	def write_to_file(self, fd):
-		print(f"Writing: {self.id}")
+		# print(f"Writing: {self.id}")
 		xml = constants.ELLIPSE_XML
 		xml = xml.replace("{{ID}}", self.id)
 		xml = xml.replace("{{X}}", str(self.x))
