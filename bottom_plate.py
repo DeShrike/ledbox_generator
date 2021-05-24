@@ -7,7 +7,7 @@ import constants
 OFFSETX = 10
 OFFSETY = 10
 
-def create_hole(x1:int, y1:int, w:int, h:int, id:str):
+def create_hole(x1:float, y1:float, w:float, h:float, id:str):
     p = Path(id, True)
     p.color = constants.BLUE
     p.add_node(x1, y1)
@@ -107,13 +107,24 @@ def add_side_pin_holes(root):
         pholes.add_path(h)
 
     # Left & Right
-    for yy in range(GRID_H):
+    pinholecount = GRID_H if not ADD_FOOT else GRID_H - 2 
+    for yy in range(pinholecount):
         x = LIP_WIDTH - delta
         y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT)) + THICKNESS + ((GRID_PART_HEIGHT - PIN_SIZE) / 2)
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"pinhole_left_{yy}")
         pholes.add_path(h)
         x = LIP_WIDTH + HORIZONTAL_DIVIDER_LENGTH + THICKNESS - delta
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"pinhole_right_{yy}")
+        pholes.add_path(h)
+
+    if ADD_FOOT:
+        # Create holes for footside
+        x = LIP_WIDTH - delta
+        y = VERTICAL_DIVIDER_LENGTH  + (1 * THICKNESS) + (1 * LIP_WIDTH) - FOOT_HEIGHT
+        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT, f"backhole_left")
+        pholes.add_path(h)
+        x = LIP_WIDTH + HORIZONTAL_DIVIDER_LENGTH + THICKNESS - delta
+        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT, f"backhole_right_{yy}")
         pholes.add_path(h)
 
 def add_center_horizontal_pin_holes(root, no_firstandlast_hole:bool = False):

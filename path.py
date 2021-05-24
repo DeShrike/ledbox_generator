@@ -7,6 +7,10 @@ class Path():
 		self.closed = closed
 		self.color = "000000"
 		self.flip_xy = False
+		self.delta = (0, 0)
+
+	def move(self, delta):
+		self.delta = delta
 
 	def write_to_file(self, fd):
 		if len(self.nodes) == 0:
@@ -32,23 +36,29 @@ class Path():
 
 	def generate_svg_path(self) -> str:
 		data = ""
+		translated = []
+
 		ixx = 1 if self.flip_xy else 0
 		ixy = 0 if self.flip_xy else 1
-		x = self.nodes[0][ixx]
-		y = self.nodes[0][ixy]
+
+		for node in self.nodes:
+			translated.append((node[ixx] + self.delta[ixx], node[ixy] + self.delta[ixy]))
+
+		x = translated[0][0]
+		y = translated[0][1]
 		data += f"M {self.format_number(x)},{self.format_number(y)}"
-		for node in self.nodes[1:]:
-			dx = node[ixx] - x
-			dy = node[ixy] - y
+		for node in translated[1:]:
+			dx = node[0] - x
+			dy = node[1] - y
 			if dx == 0 and dy != 0:
-				y = node[ixy]
+				y = node[1]
 				data += f" V {self.format_number(y)}"
 			elif dx != 0 and dy == 0:
-				x = node[ixx]
+				x = node[0]
 				data += f" H {self.format_number(x)}"
 			else:
-				x = node[ixx]
-				y = node[ixy]
+				x = node[0]
+				y = node[1]
 				data += f" L {self.format_number(x)},{self.format_number(y)}"
 
 		if self.closed:

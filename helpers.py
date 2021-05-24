@@ -8,6 +8,25 @@ import math
 # Helpers
 #######################################################################################
 
+def rotate_point(cx:float, cy:float, px:float, py:float, angle:float):
+    radians = angle / 360 * 2 * math.pi
+    s = math.sin(radians);
+    c = math.cos(radians);
+
+    # translate to origin
+    rx = px - cx
+    ry = py - cy
+
+    # rotate
+    xnew = rx * c - ry * s
+    ynew = rx * s + ry * c
+
+    # translate back
+    xnew += cx
+    ynew += cy
+    
+    return (xnew, ynew)
+
 def create_line(x1:float, y1:float, x2:float, y2:float, id:str):
     p = Path(id, False)
     p.color = constants.RED

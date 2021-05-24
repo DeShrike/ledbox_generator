@@ -11,7 +11,7 @@ from top_plate import generate_top_plate
 from horizontal_dividers import generate_horizontal_dividers
 from vertical_dividers import generate_vertical_dividers
 from sides import generate_sides
-from ledsandbuttons import generate_ledsandbuttons
+from leds_and_buttons import generate_ledsandbuttons
 from foot_parts import generate_foot_parts
 
 def main():
@@ -39,18 +39,12 @@ def main():
     sides = Layer("Root")
     generate_sides(sides)
     add_text(sides, "Sides")
-    save(sides, os.path.join(OUTPUT_FOLDER, "sides.svg"), "SIDES", PAPER_WIDTH, PAPER_HEIGHT)
+    save(sides, os.path.join(OUTPUT_FOLDER, "sides_and_foot.svg" if ADD_FOOT else "sides.svg"), "SIDES", PAPER_WIDTH, PAPER_HEIGHT)
 
     ledsandbuttons = Layer("Root")
     generate_ledsandbuttons(ledsandbuttons)
     add_text(ledsandbuttons, "Leds And Buttons")
-    save(ledsandbuttons, os.path.join(OUTPUT_FOLDER, "ledsandbuttons.svg"), "LEDSANDBUTTONS", PAPER_WIDTH, PAPER_HEIGHT)
-
-    if ADD_FOOT == True:
-        footparts = Layer("Root")
-        generate_foot_parts(footparts)
-        add_text(footparts, "Foot Parts")
-        save(footparts, os.path.join(OUTPUT_FOLDER, "footparts.svg"), "FOOTPARTS", PAPER_WIDTH, PAPER_HEIGHT)
+    save(ledsandbuttons, os.path.join(OUTPUT_FOLDER, "leds_and_buttons.svg"), "LEDSANDBUTTONS", PAPER_WIDTH, PAPER_HEIGHT)
 
 if __name__ == "__main__":
     main()
