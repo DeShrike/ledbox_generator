@@ -12,7 +12,6 @@ from horizontal_dividers import generate_horizontal_dividers
 from vertical_dividers import generate_vertical_dividers
 from sides import generate_sides
 from leds_and_buttons import generate_ledsandbuttons
-from foot_parts import generate_foot_parts
 
 def main():
 

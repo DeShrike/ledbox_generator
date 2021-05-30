@@ -1,7 +1,7 @@
 from group import Group
 from path import Path
 from helpers import *
-from config  import *
+from config  import * 
 import constants
 
 OFFSETX = 10
@@ -12,6 +12,67 @@ f1 = (0, 0)
 f2 = (0, 0)
 f3 = (0, 0)
 f4 = (0, 0)
+
+rf1 = (0, 0)
+rf2 = (0, 0)
+rf3 = (0, 0)
+rf4 = (0, 0)
+
+def add_foot_bottom(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    width = HORIZONTAL_DIVIDER_LENGTH
+    height = distance(rf3, rf4)
+    bottom = Group("foot_bottom")
+    root.groups.append(bottom)
+
+    p = Path("foot_bottom_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
+    bottom.add_path(p)
+
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x(), p.last_y(), 1, width / 2, -PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+
+    d = distance(f3, f4)
+    pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+    spacing = d / pincount
+    o = spacing / 2
+    add_vert_pins(p, p.last_x(), p.last_y() - o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() + o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+
+def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    width = HORIZONTAL_DIVIDER_LENGTH
+    height = distance(f1, rf2)
+    bottom = Group("foot_top")
+    root.groups.append(bottom)
+
+    p = Path("foot_top_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
+    bottom.add_path(p)
+
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x(), p.last_y(), 1, width / 2, -PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+
+    d = distance(f1, rf2)
+    pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+    spacing = d / pincount
+    o = spacing / 2
+    add_vert_pins(p, p.last_x(), p.last_y() - o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, 1)
+   
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() + o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
 def add_back(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
@@ -87,7 +148,7 @@ def add_horizontal_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
         lines.add_path(l)
 
 def add_vertical_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
-    global f1, f2, f3, f4
+    global f1, f2, f3, f4, rf2, rf3, rf4
     width = VERTICAL_DIVIDER_LENGTH + (2 * THICKNESS)
     height = DIVIDER_HEIGHT
     side = Group("vertical_side")
@@ -106,34 +167,33 @@ def add_vertical_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
 
     # top right
     if ADD_FOOT:
-        cx = OFFSETX + width - FOOT_HEIGHT
-        cy = OFFSETY + 0
-        f1 = (cx, cy)
-        p.add_node(cx, cy)
+        f1 = (OFFSETX + width - FOOT_HEIGHT, OFFSETY + 0)
+        f2 = (OFFSETX + width - FOOT_HEIGHT, OFFSETY + 0 - FOOT_SIZE)
+        f3 = (OFFSETX + width, OFFSETY + 0 - FOOT_SIZE)
+        f4 = (OFFSETX + width, OFFSETY + 0)
+        r = Rotation(f1[0], f1[1], -FOOT_ANGLE)
+        rf1 = rotate(r, f1[0], f1[1])
+        rf2 = rotate(r, f2[0], f2[1])
+        rf3 = rotate(r, f3[0], f3[1])
+        rf4 = rotate(r, f4[0], f4[1])
 
-        px = OFFSETX + width - FOOT_HEIGHT
-        py = OFFSETY + 0 - FOOT_SIZE
-        rotated = rotate_point(cx, cy, px, py, -FOOT_ANGLE)
-        px = rotated[0]
-        py = rotated[1]
-        cx = OFFSETX + width
-        cy = OFFSETY + 0 - FOOT_SIZE
-        rotated = rotate_point(cx, cy, px, py, -FOOT_ANGLE)
+        p.add_node(f1[0], f1[1])
 
-        f2 = (rotated[0], rotated[1])
-        p.add_node(rotated[0], rotated[1])
+        d = distance(f1, rf2)
+        pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+        spacing = d / pincount
+        o = spacing / 2
+        add_vert_pins(p, f1[0], f1[1] + o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, -1, r)
 
-        cx = OFFSETX + width
-        cy = OFFSETY + 0
-        px = OFFSETX + width
-        py = OFFSETY + 0 - FOOT_SIZE
-        rotated = rotate_point(cx, cy, px, py, -FOOT_ANGLE)
+        p.add_node(f2[0], f2[1], r)
+        
+        d = distance(f2, f3)
 
-        f3 = (rotated[0], rotated[1])
-        p.add_node(rotated[0], rotated[1])
+        add_horz_pins(p, f2[0], f2[1], 1, d / 2, PIN_OUT_WIDTH, PIN_SIZE, 1, r)
 
-        f4 = (cx, cy)
-        p.add_node(cx, cy)
+        p.add_node(f3[0], f3[1], r)
+        p.add_node(f4[0], f4[1], r)
+        p.add_node(f4[0], f4[1])
     else:
         p.add_node(OFFSETX + width, OFFSETY + 0)
     
@@ -173,3 +233,5 @@ def generate_sides(root):
     add_vertical_side(root, spacing * 1.5, spacing * 4.5)
     if ADD_FOOT:
         add_back(root, 0, spacing * 2)
+        add_foot_bottom(root, 0, spacing * 5.5)
+        add_foot_top(root, 0, spacing * 9)

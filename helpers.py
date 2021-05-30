@@ -1,5 +1,5 @@
 from group import Group
-from path import Path
+import path
 from text import Text
 import constants
 import math
@@ -8,10 +8,20 @@ import math
 # Helpers
 #######################################################################################
 
+class Rotation():
+    def __init__(self, cx:float, cy:float, angle:float):
+        self.cx = cx
+        self.cy = cy
+        self.angle = angle
+
+
+def rotate(r:Rotation, x:float, y:float):
+    return rotate_point(r.cx, r.cy, x, y, r.angle)
+
 def rotate_point(cx:float, cy:float, px:float, py:float, angle:float):
     radians = angle / 360 * 2 * math.pi
-    s = math.sin(radians);
-    c = math.cos(radians);
+    s = math.sin(radians)
+    c = math.cos(radians)
 
     # translate to origin
     rx = px - cx
@@ -27,15 +37,21 @@ def rotate_point(cx:float, cy:float, px:float, py:float, angle:float):
     
     return (xnew, ynew)
 
+def distance(p1, p2) -> float:
+    return distance2(p1[0], p1[1], p2[0], p2[1])
+
+def distance2(x1:float, y1:float, x2:float, y2:float) -> float:
+    return math.sqrt( ((x2 - x1) ** 2) + ((y2 - y1) ** 2))
+
 def create_line(x1:float, y1:float, x2:float, y2:float, id:str):
-    p = Path(id, False)
+    p = path.Path(id, False)
     p.color = constants.RED
     p.add_node(x1, y1)
     p.add_node(x2, y2)
     return p
 
 def create_hole(x1:float, y1:float, w:float, h:float, id:str):
-    p = Path(id, True)
+    p = path.Path(id, True)
     p.color = constants.GREEN
     p.add_node(x1, y1)
     p.add_node(x1 + w, y1)
@@ -80,7 +96,7 @@ def add_rounded_corner(path, x:float, y:float, r:float, corner:str):
     path.add_node(xx, yy)
 
 def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3, color:str = constants.MAGENTA):
-    p = Path(f"rounded_box_{x}_{y}", True)
+    p = path.Path(f"rounded_box_{x}_{y}", True)
     p.color = color
 
     add_rounded_corner(p, x + 0, y + 0, rounding, "TL")
@@ -101,7 +117,7 @@ def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3, color:str 
 
     return p
 
-def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int):
+def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int, rotation:Rotation = None):
     # adds pins on a vertical line
     # x, y: start point
     # count: numbers of pins
@@ -111,16 +127,16 @@ def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float
     # direction: 1 or -1: y-direction
     for _ in range(count):
         y += (spacing - (thickness / 2.0)) * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x += indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y += thickness * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x -= indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y -= (thickness / 2.0) * direction
 
-def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int):
+def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int, rotation:Rotation = None):
     # adds pins on a horizontal line
     # x, y: start point
     # count: numbers of pins
@@ -130,13 +146,13 @@ def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float
     # direction: 1 or -1: x-direction
     for _ in range(count):
         x += (spacing - (thickness / 2.0)) * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y += indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x += thickness * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y -= indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x -= (thickness / 2.0) * direction
 
 def add_horz_pins_ex(path, x:float, y:float, count:int, spacing:float, data, direction:int, slid_data = None):

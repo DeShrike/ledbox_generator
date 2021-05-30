@@ -1,4 +1,5 @@
 import constants
+from helpers import Rotation, rotate_point
 
 class Path():
 	def __init__(self, id:str, closed:bool):
@@ -67,5 +68,9 @@ class Path():
 		# print(data)
 		return data
 
-	def add_node(self, x:float, y:float):
-		self.nodes.append( (x, y) )
+	def add_node(self, x:float, y:float, rotation:Rotation = None):
+		if rotation is None:
+			self.nodes.append( (x, y) )
+		else:
+			rotated = rotate_point(rotation.cx, rotation.cy, x, y, rotation.angle)
+			self.nodes.append( rotated )
