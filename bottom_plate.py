@@ -90,7 +90,7 @@ def add_indicator_lines(root):
         hlines.add_path(l)
         y += GRID_PART_HEIGHT
 
-def add_side_pin_holes(root):
+def add_side_pin_holes(root, is_bottom_plate:bool):
     pholes = Group("side_pin_holes")
     root.groups.append(pholes)
 
@@ -107,7 +107,7 @@ def add_side_pin_holes(root):
         pholes.add_path(h)
 
     # Left & Right
-    pinholecount = GRID_H if not ADD_FOOT else GRID_H - 2 
+    pinholecount = GRID_H - 2 if ADD_FOOT and is_bottom_plate else GRID_H
     for yy in range(pinholecount):
         x = LIP_WIDTH - delta
         y = LIP_WIDTH + (yy * (THICKNESS + GRID_PART_HEIGHT)) + THICKNESS + ((GRID_PART_HEIGHT - PIN_SIZE) / 2)
@@ -117,7 +117,7 @@ def add_side_pin_holes(root):
         h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"pinhole_right_{yy}")
         pholes.add_path(h)
 
-    if ADD_FOOT:
+    if ADD_FOOT and is_bottom_plate:
         # Create holes for footside
         x = LIP_WIDTH - delta
         y = VERTICAL_DIVIDER_LENGTH  + (1 * THICKNESS) + (1 * LIP_WIDTH) - FOOT_HEIGHT
@@ -163,5 +163,5 @@ def generate_bottom_plate(root):
     add_outline(root)
     add_indicator_lines(root)
     add_indicator_crosses(root)
-    add_side_pin_holes(root)
+    add_side_pin_holes(root, True)
     add_center_horizontal_pin_holes(root, True)

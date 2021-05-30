@@ -21,7 +21,7 @@ def create_hole(x1:int, y1:int, w:int, h:int, id:str):
 def generate_top_plate(root):
     add_outline(root)
     add_indicator_lines(root)
-    add_side_pin_holes(root)
+    add_side_pin_holes(root, False)
     add_center_horizontal_pin_holes(root)
     add_center_vertical_pin_holes(root)
 
