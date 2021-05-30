@@ -3,6 +3,7 @@ from path import Path
 from helpers import *
 from config  import * 
 import constants
+from itertools import product
 
 OFFSETX = 10
 OFFSETY = 10
@@ -49,14 +50,14 @@ def add_foot_bottom(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
 def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
     height = distance(f1, rf2)
-    bottom = Group("foot_top")
-    root.groups.append(bottom)
+    top = Group("foot_top")
+    root.groups.append(top)
 
     p = Path("foot_top_outline", True)
     p.move((extra_offset_x, extra_offset_y))
     p.flip_xy = FLIPXY
     p.color = constants.MAGENTA
-    bottom.add_path(p)
+    top.add_path(p)
 
     p.add_node(OFFSETX + 0,     OFFSETY + 0)
     add_horz_pins(p, p.last_x(), p.last_y(), 1, width / 2, -PIN_OUT_WIDTH, PIN_SIZE, 1)
@@ -73,6 +74,25 @@ def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     
     p.add_node(OFFSETX + 0,     OFFSETY + height)
     add_vert_pins(p, p.last_x(), p.last_y() + o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+
+    # Add vent hole grid
+    gridsize = 11
+    hh = 5
+    hw = (width / height) * hh
+    gutter = 3
+    h_extent = (gridsize * hh) + (gridsize - 1) * gutter
+    w_extent = (gridsize * hw) + (gridsize - 1) * gutter
+    h_offset =  (height - h_extent) / 2
+    w_offset =  (width - w_extent) / 2
+    for x, y in product(range(gridsize), range(gridsize)):
+        xx = x * (hw + gutter) + w_offset
+        yy = y * (hh + gutter) + h_offset
+        if (x + y) % 2 == 0:
+            continue
+        hole = create_hole(OFFSETX + xx, OFFSETY + yy, hw, hh, f"back_top_hole_{x}_{y}")
+        hole.move((extra_offset_x, extra_offset_y))
+        hole.flip_xy = FLIPXY
+        top.add_path(hole)
 
 def add_back(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
