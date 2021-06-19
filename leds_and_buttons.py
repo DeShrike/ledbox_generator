@@ -14,14 +14,14 @@ def add_button_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
     g.add_ellipse(e)
 
     if add_wire_holes:
-        e = Ellipse(cx - 2.5, cy - 5.5, 0.5, constants.BLUE)
+        e = Ellipse(cx - 2.5, cy - 5.5, 0.7, constants.BLUE)
         g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy - 5.5, 0.5, constants.BLUE)
+        e = Ellipse(cx + 2.5, cy - 5.5, 0.7, constants.BLUE)
         g.add_ellipse(e)
 
-        e = Ellipse(cx - 2.5, cy + 5.5, 0.5, constants.BLUE)
+        e = Ellipse(cx - 2.5, cy + 5.5, 0.7, constants.BLUE)
         g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy + 5.5, 0.5, constants.BLUE)
+        e = Ellipse(cx + 2.5, cy + 5.5, 0.7, constants.BLUE)
         g.add_ellipse(e)
 
 def add_led_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
@@ -30,9 +30,9 @@ def add_led_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
     g.add_ellipse(e)
 
     if add_wire_holes:
-        e = Ellipse(cx - 1, cy, 0.2, constants.BLUE)
+        e = Ellipse(cx - 1, cy, 0.4, constants.BLUE)
         g.add_ellipse(e)
-        e = Ellipse(cx + 1, cy, 0.2, constants.BLUE)
+        e = Ellipse(cx + 1, cy, 0.4, constants.BLUE)
         g.add_ellipse(e)
 
 def add_circuit_box(root, extra_offset_x:int, extra_offset_y:int):

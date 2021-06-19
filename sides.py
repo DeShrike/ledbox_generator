@@ -91,7 +91,7 @@ def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     spacing = d / pincount
     o = spacing / 2
     add_vert_pins(p, p.last_x(), p.last_y() - o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, 1)
-   
+
     p.add_node(OFFSETX + width, OFFSETY + height)
     
     p.add_node(OFFSETX + 0,     OFFSETY + height)
@@ -265,6 +265,7 @@ def generate_sides(root):
     add_horizontal_side(root, 0, spacing * 1)
     add_vertical_side(root, 0, spacing * 3.5)
     add_vertical_side(root, spacing * 1.5, spacing * 4.5)
+
     if ADD_FOOT:
         add_back(root, 0, spacing * 2)
         add_foot_bottom(root, 0, spacing * 5.5)
