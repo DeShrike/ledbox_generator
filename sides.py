@@ -70,8 +70,9 @@ def add_vent_grid(root, gridsizex, gridsizey, width, height, extra_offset):
         grid.add_path(hole)
 
 def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    shorten = THICKNESS * 1.5
     width = HORIZONTAL_DIVIDER_LENGTH
-    height = distance(f1, rf2)
+    height = distance(f1, rf2) - shorten
     top = Group("foot_top")
     root.groups.append(top)
 
@@ -95,13 +96,13 @@ def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     p.add_node(OFFSETX + width, OFFSETY + height)
     
     p.add_node(OFFSETX + 0,     OFFSETY + height)
-    add_vert_pins(p, p.last_x(), p.last_y() + o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+    add_vert_pins(p, p.last_x(), p.last_y() + o + shorten, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
     add_vent_grid(top, 11, 11, width, height, (extra_offset_x, extra_offset_y))
 
 def add_back(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
-    height = FOOT_HEIGHT
+    height = FOOT_HEIGHT - (2 * THICKNESS)
     side = Group("back_side")
     root.groups.append(side)
 
@@ -265,7 +266,6 @@ def generate_sides(root):
     add_horizontal_side(root, 0, spacing * 1)
     add_vertical_side(root, 0, spacing * 3.5)
     add_vertical_side(root, spacing * 1.5, spacing * 4.5)
-
     if ADD_FOOT:
         add_back(root, 0, spacing * 2)
         add_foot_bottom(root, 0, spacing * 5.5)

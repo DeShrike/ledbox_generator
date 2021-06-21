@@ -119,12 +119,13 @@ def add_side_pin_holes(root, is_bottom_plate:bool):
 
     if ADD_FOOT and is_bottom_plate:
         # Create holes for footside
+        speling = 0.02
         x = LIP_WIDTH - delta
-        y = VERTICAL_DIVIDER_LENGTH  + (1 * THICKNESS) + (1 * LIP_WIDTH) - FOOT_HEIGHT
-        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT, f"backhole_left")
+        y = VERTICAL_DIVIDER_LENGTH  + (1 * THICKNESS) + (1 * LIP_WIDTH) - FOOT_HEIGHT                       + THICKNESS - (FOOT_HEIGHT * speling)
+        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT * (1 + speling), f"backhole_left")
         pholes.add_path(h)
         x = LIP_WIDTH + HORIZONTAL_DIVIDER_LENGTH + THICKNESS - delta
-        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT, f"backhole_right_{yy}")
+        h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, FOOT_HEIGHT * (1 + speling), f"backhole_right_{yy}")
         pholes.add_path(h)
 
 def add_center_horizontal_pin_holes(root, no_firstandlast_hole:bool = False):

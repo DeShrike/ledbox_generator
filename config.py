@@ -8,22 +8,22 @@ PAPER_WIDTH = 600
 PAPER_HEIGHT = 450
 
 # Number of boxes X * Y
-GRID_W = 5 # 5 #5 #18
+GRID_W = 5 # 5 #5 #17
 GRID_H = 8 # 8 #8 #13
 
 # Material Thickness
 THICKNESS = 3
 
 # Inner size of one box
-GRID_PART_WIDTH = 33.33 - THICKNESS
-GRID_PART_HEIGHT = 33.33 - THICKNESS
+GRID_PART_WIDTH = 33.3333 - THICKNESS
+GRID_PART_HEIGHT = 33.3333 - THICKNESS
 
 PIN_SIZE = 10
-PIN_WIDTH = THICKNESS # + 0.5
-PIN_OUT_WIDTH = THICKNESS # * 1.5
+PIN_WIDTH = THICKNESS + 0.2    # + 0.2 to more easily insert the pins in the holes
+PIN_OUT_WIDTH = THICKNESS * 1.1   # * 1.1 so that the pins stick out a bit
 
 WIRE_DIP_SIZE = 13
-WIRE_DIP_WIDTH = THICKNESS * 2.5
+WIRE_DIP_WIDTH = THICKNESS * 2
 
 LIP_WIDTH = THICKNESS
 
