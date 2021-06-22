@@ -19,7 +19,7 @@ GRID_PART_WIDTH = 33.3333 - THICKNESS
 GRID_PART_HEIGHT = 33.3333 - THICKNESS
 
 PIN_SIZE = 10
-PIN_WIDTH = THICKNESS + 0.2    # + 0.2 to more easily insert the pins in the holes
+PIN_WIDTH = THICKNESS + 0.1    # + 0.2 to more easily insert the pins in the holes
 PIN_OUT_WIDTH = THICKNESS * 1.1   # * 1.1 so that the pins stick out a bit
 
 WIRE_DIP_SIZE = 13

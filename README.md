@@ -1,7 +1,12 @@
 # LedBox Generator
 
-Creates SVG files for a Laster Cutter to cut out the various parts of a grid box that can be used to build a led grid box.
+Creates SVG files for a Laser Cutter to cut out the various parts of a grid box that can be used to build a led grid box.
 
-See config.py to configure the box.
+## Usage
 
-More info comming soon...
+Edit settings in config.py
+
+Run python3 main.py
+
+SVG files are created in the out folder.
+

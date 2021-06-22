@@ -14,14 +14,14 @@ def add_button_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
     g.add_ellipse(e)
 
     if add_wire_holes:
-        e = Ellipse(cx - 2.5, cy - 5.7, 0.99, constants.BLUE)
+        e = Ellipse(cx - 2.5, cy - 5.7, 1.7, constants.BLUE)
         g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy - 5.7, 0.99, constants.BLUE)
+        e = Ellipse(cx + 2.5, cy - 5.7, 1.7, constants.BLUE)
         g.add_ellipse(e)
 
-        e = Ellipse(cx - 2.5, cy + 5.7, 0.99, constants.BLUE)
+        e = Ellipse(cx - 2.5, cy + 5.7, 1.7, constants.BLUE)
         g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy + 5.7, 0.99, constants.BLUE)
+        e = Ellipse(cx + 2.5, cy + 5.7, 1.7, constants.BLUE)
         g.add_ellipse(e)
 
 def add_led_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
