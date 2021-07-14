@@ -158,22 +158,23 @@ def add_horizontal_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     p.add_node(OFFSETX + 0,     OFFSETY + height)
     add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines_horizontal_side")
-    side.groups.append(lines)
+    if ADD_SIDE_GUIDELINES:
+        lines = Group("indicatorlines_horizontal_side")
+        side.groups.append(lines)
 
-    for xx in range(1, GRID_W):
-        x = xx * (GRID_PART_WIDTH + THICKNESS) - THICKNESS
-        y = 0
-        y2 = DIVIDER_HEIGHT
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
-        l.move((extra_offset_x, extra_offset_y))
-        l.flip_xy = FLIPXY
-        lines.add_path(l)
-        x += THICKNESS
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
-        l.move((extra_offset_x, extra_offset_y))
-        l.flip_xy = FLIPXY
-        lines.add_path(l)
+        for xx in range(1, GRID_W):
+            x = xx * (GRID_PART_WIDTH + THICKNESS) - THICKNESS
+            y = 0
+            y2 = DIVIDER_HEIGHT
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
+            x += THICKNESS
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
 
 def add_vertical_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     global f1, f2, f3, f4, rf2, rf3, rf4
@@ -242,22 +243,23 @@ def add_vertical_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     p.add_node(OFFSETX + 0,     OFFSETY + height)
     add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, PIN_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines_vertical_side")
-    side.groups.append(lines)
+    if ADD_SIDE_GUIDELINES:
+        lines = Group("indicatorlines_vertical_side")
+        side.groups.append(lines)
 
-    for xx in range(1, GRID_H):
-        x = xx * (GRID_PART_HEIGHT + THICKNESS)
-        y = 0
-        y2 = DIVIDER_HEIGHT
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
-        l.move((extra_offset_x, extra_offset_y))
-        l.flip_xy = FLIPXY
-        lines.add_path(l)
-        x += THICKNESS
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
-        l.move((extra_offset_x, extra_offset_y))
-        l.flip_xy = FLIPXY
-        lines.add_path(l)
+        for xx in range(1, GRID_H):
+            x = xx * (GRID_PART_HEIGHT + THICKNESS)
+            y = 0
+            y2 = DIVIDER_HEIGHT
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
+            x += THICKNESS
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
 
 
 def generate_sides(root):

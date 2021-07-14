@@ -162,7 +162,8 @@ def add_center_vertical_pin_holes(root):
 
 def generate_bottom_plate(root):
     add_outline(root)
-    add_indicator_lines(root)
+    if ADD_BOTTOM_PLATE_GUIDELINES:
+        add_indicator_lines(root)
     add_indicator_crosses(root)
     add_side_pin_holes(root, True)
     add_center_horizontal_pin_holes(root, True)
