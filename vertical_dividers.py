@@ -29,7 +29,7 @@ def add_vertical_divider(root, extra_offset_y:int = 0):
 
     # bottom right
     p.add_node(OFFSETX + width, OFFSETY + height + extra_offset_y)
-    data = [ (-WIRE_DIP_WIDTH, WIRE_DIP_SIZE) ] * GRID_H
+    data = [ (-LEDSTRIP_DIP_WIDTH, LEDSTRIP_DIP_SIZE) ] * GRID_H
     add_horz_pins_ex(p, p.last_x() + (GRID_PART_HEIGHT / 2) + THICKNESS, p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, data, -1)
     
     # bottom left

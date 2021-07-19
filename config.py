@@ -30,6 +30,9 @@ PIN_OUT_WIDTH = THICKNESS * 1.1   # * 1.1 so that the pins stick out a bit
 WIRE_DIP_SIZE = 11
 WIRE_DIP_WIDTH = THICKNESS * 1
 
+LEDSTRIP_DIP_SIZE = 11
+LEDSTRIP_DIP_WIDTH = 1
+
 LIP_WIDTH = THICKNESS
 
 # Inner height of box
