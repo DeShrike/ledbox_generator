@@ -95,7 +95,7 @@ def add_rounded_corner(path, x:float, y:float, r:float, corner:str):
     yy = math.cos(a) * r + cy
     path.add_node(xx, yy)
 
-def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3, color:str = constants.MAGENTA):
+def create_rounded_box(x:int, y:int, w:int, h:int, rounding:int = 3, color:str = constants.MAGENTA):
     p = path.Path(f"rounded_box_{x}_{y}", True)
     p.color = color
 

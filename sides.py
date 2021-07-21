@@ -2,6 +2,7 @@ from group import Group
 from path import Path
 from helpers import *
 from config  import * 
+from ellipse import Ellipse
 import constants
 from itertools import product
 
@@ -129,6 +130,15 @@ def add_back(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
     add_vent_grid(side, 11, 3, width, height, (extra_offset_x, extra_offset_y))
+
+    # wire hole
+    wire_hole_dia = 8
+    holex = OFFSETX + width - 20 + extra_offset_x
+    holey = OFFSETY + height - 20 + extra_offset_y
+    if FLIPXY:
+        holex, holey = holey, holex
+    e = Ellipse(holex, holey, wire_hole_dia / 2, constants.BLUE)
+    side.add_ellipse(e)
 
 def add_horizontal_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH

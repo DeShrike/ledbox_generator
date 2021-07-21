@@ -36,6 +36,6 @@ def add_vertical_divider(root, extra_offset_y:int = 0):
     p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
 
 def generate_vertical_dividers(root):
-    spacing = BOX_INNER_DEPTH + 4
+    spacing = BOX_INNER_DEPTH + 6
     for i in range(VERTICAL_DIVIDER_COUNT):
         add_vertical_divider(root, spacing * i)

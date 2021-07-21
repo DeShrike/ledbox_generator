@@ -8,8 +8,8 @@ PAPER_WIDTH = 600
 PAPER_HEIGHT = 450
 
 # Number of boxes X * Y
-GRID_W = 13 # 5 #5 #17
-GRID_H = 17 # 8 #8 #13
+GRID_W = 13 # 5 13
+GRID_H = 17 # 8 17
 
 # Material Thickness
 THICKNESS = 3
@@ -35,8 +35,10 @@ LEDSTRIP_DIP_WIDTH = 1
 
 LIP_WIDTH = THICKNESS
 
-# Inner height of box
 BOX_INNER_DEPTH = 30
+
+# Don't change these calculations unless you know what you are doing
+# Inner height of box
 BOX_OUTER_DEPTH = BOX_INNER_DEPTH + (2 * THICKNESS)
 
 DIVIDER_HEIGHT = BOX_INNER_DEPTH
@@ -52,7 +54,6 @@ SLID_WIDTH = THICKNESS + 0.5
 ADD_FOOT = True
 FOOT_SIZE = 160
 FOOT_HEIGHT = 60
-# BOTTOM_MARGIN = FOOT_HEIGHT
-FOOT_ANGLE = 5	# 5 Degrees
+FOOT_ANGLE = 5  # 5 Degrees
 
 OUTPUT_FOLDER = "./out"

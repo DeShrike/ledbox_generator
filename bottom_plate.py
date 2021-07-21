@@ -1,5 +1,6 @@
 from group import Group
 from path import Path
+from ellipse import Ellipse
 from helpers import *
 from config  import *
 import constants
@@ -16,6 +17,12 @@ def create_hole(x1:float, y1:float, w:float, h:float, id:str):
     p.add_node(x1, y1 + h)
     return p
 
+def create_centered_rounded_box(cx:float, cy:float, w:float, h:float, rounding:int = 3, color:str = constants.MAGENTA):
+    return create_rounded_box(cx - w / 2, cy - h / 2, w, h, rounding, color)
+
+def created_centered_hole(cx:float, cy:float, w:float, h:float, id:str):
+    return create_hole(cx - w / 2, cy - h / 2, w, h, id)
+
 def add_outline(root):
     width = HORIZONTAL_DIVIDER_LENGTH + (2 * THICKNESS) + (2 * LIP_WIDTH)
     height = VERTICAL_DIVIDER_LENGTH  + (2 * THICKNESS) + (2 * LIP_WIDTH)
@@ -24,7 +31,7 @@ def add_outline(root):
 
     p = create_rounded_box(OFFSETX, OFFSETY, width, height, 6)
     outline.add_path(p)
-    
+
     """
     p = Path("outer_border", True)
     p.color = constants.MAGENTA2
@@ -44,7 +51,7 @@ def add_indicator_crosses(root):
     crosses = Group("crosses")
     root.groups.append(crosses)
     v_line_length = GRID_PART_HEIGHT / 3
-    h_line_length = GRID_PART_WIDTH / 3 
+    h_line_length = GRID_PART_WIDTH / 3
     for xx in range(GRID_W):
         for yy in range(GRID_H):
             cx = xx * (GRID_PART_WIDTH + THICKNESS) + (GRID_PART_WIDTH / 2) + LIP_WIDTH + THICKNESS
@@ -160,10 +167,27 @@ def add_center_vertical_pin_holes(root):
             h = create_hole(OFFSETX + x, OFFSETY + y, PIN_WIDTH, PIN_SIZE, f"v_pinhole_left_{xx}_{yy}")
             choles.add_path(h)
 
+def add_wire_hole(root):
+    holes = Group("wire_hole")
+    root.groups.append(holes)
+    wire_hole_dia_x = 8
+    wire_hole_dia_y = 12
+
+    cx = (GRID_W - 1) * (GRID_PART_WIDTH + THICKNESS) + (GRID_PART_WIDTH / 2) + LIP_WIDTH + THICKNESS
+    cy = (GRID_H - 1) * (GRID_PART_HEIGHT + THICKNESS) + (GRID_PART_HEIGHT / 2) + LIP_WIDTH + THICKNESS
+
+    holex = cx + GRID_PART_WIDTH / 2 - wire_hole_dia_x / 3
+    holey = cy
+    h = create_centered_rounded_box(OFFSETX + holex, OFFSETY + holey, wire_hole_dia_x, wire_hole_dia_y, 1)
+    holes.add_path(h)
+    # e = Ellipse(OFFSETX + holex, OFFSETY + holey, wire_hole_dia_x / 2, constants.BLUE, wire_hole_dia_y / 2)
+    # holes.add_ellipse(e)
+
 def generate_bottom_plate(root):
     add_outline(root)
     if ADD_BOTTOM_PLATE_GUIDELINES:
         add_indicator_lines(root)
     add_indicator_crosses(root)
     add_side_pin_holes(root, True)
-    add_center_horizontal_pin_holes(root, True)
+    add_center_horizontal_pin_holes(root, False)
+    add_wire_hole(root)
