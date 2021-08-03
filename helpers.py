@@ -1,5 +1,5 @@
 from group import Group
-from path import Path
+import path
 from text import Text
 import constants
 import math
@@ -8,15 +8,50 @@ import math
 # Helpers
 #######################################################################################
 
+class Rotation():
+    def __init__(self, cx:float, cy:float, angle:float):
+        self.cx = cx
+        self.cy = cy
+        self.angle = angle
+
+
+def rotate(r:Rotation, x:float, y:float):
+    return rotate_point(r.cx, r.cy, x, y, r.angle)
+
+def rotate_point(cx:float, cy:float, px:float, py:float, angle:float):
+    radians = angle / 360 * 2 * math.pi
+    s = math.sin(radians)
+    c = math.cos(radians)
+
+    # translate to origin
+    rx = px - cx
+    ry = py - cy
+
+    # rotate
+    xnew = rx * c - ry * s
+    ynew = rx * s + ry * c
+
+    # translate back
+    xnew += cx
+    ynew += cy
+    
+    return (xnew, ynew)
+
+def distance(p1, p2) -> float:
+    return distance2(p1[0], p1[1], p2[0], p2[1])
+
+def distance2(x1:float, y1:float, x2:float, y2:float) -> float:
+    return math.sqrt( ((x2 - x1) ** 2) + ((y2 - y1) ** 2))
+
 def create_line(x1:float, y1:float, x2:float, y2:float, id:str):
-    p = Path(id, False)
-    p.color = constants.MAGENTA
+    p = path.Path(id, False)
+    p.color = constants.RED
     p.add_node(x1, y1)
     p.add_node(x2, y2)
     return p
 
 def create_hole(x1:float, y1:float, w:float, h:float, id:str):
-    p = Path(id, True)
+    p = path.Path(id, True)
     p.color = constants.GREEN
     p.add_node(x1, y1)
     p.add_node(x1 + w, y1)
@@ -60,9 +95,9 @@ def add_rounded_corner(path, x:float, y:float, r:float, corner:str):
     yy = math.cos(a) * r + cy
     path.add_node(xx, yy)
 
-def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3):
-    p = Path(f"rounded_box_{x}_{y}", True)
-    p.color = constants.RED
+def create_rounded_box(x:int, y:int, w:int, h:int, rounding:int = 3, color:str = constants.MAGENTA):
+    p = path.Path(f"rounded_box_{x}_{y}", True)
+    p.color = color
 
     add_rounded_corner(p, x + 0, y + 0, rounding, "TL")
     #p.add_node(x + 0, y + 0 + rounding)
@@ -82,7 +117,7 @@ def create_rounded_box(x:int, y: int, w:int, h:int, rounding:int = 3):
 
     return p
 
-def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int):
+def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int, rotation:Rotation = None):
     # adds pins on a vertical line
     # x, y: start point
     # count: numbers of pins
@@ -92,16 +127,16 @@ def add_vert_pins(path, x:float, y:float, count:int, spacing:float, indent:float
     # direction: 1 or -1: y-direction
     for _ in range(count):
         y += (spacing - (thickness / 2.0)) * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x += indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y += thickness * direction
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         x -= indent
-        path.add_node(x, y)
+        path.add_node(x, y, rotation)
         y -= (thickness / 2.0) * direction
 
-def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int):
+def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float, thickness:float, direction:int, rotation:Rotation = None):
     # adds pins on a horizontal line
     # x, y: start point
     # count: numbers of pins
@@ -110,6 +145,41 @@ def add_horz_pins(path, x:float, y:float, count:int, spacing:float, indent:float
     # thickness: thickness of pin
     # direction: 1 or -1: x-direction
     for _ in range(count):
+        x += (spacing - (thickness / 2.0)) * direction
+        path.add_node(x, y, rotation)
+        y += indent
+        path.add_node(x, y, rotation)
+        x += thickness * direction
+        path.add_node(x, y, rotation)
+        y -= indent
+        path.add_node(x, y, rotation)
+        x -= (thickness / 2.0) * direction
+
+def add_horz_pins_ex(path, x:float, y:float, count:int, spacing:float, data, direction:int, slid_data = None):
+    # adds pins on a horizontal line
+    # x, y: start point
+    # count: numbers of pins
+    # spacing: distance between stub centers
+    # indent: size of pin (depth)
+    # thickness: thickness of pin (width)
+    # direction: 1 or -1: x-direction
+    for ix in range(count):
+        indent = data[ix][0]
+        thickness = data[ix][1]
+
+        if slid_data is not None and ix > 0:
+            slid_width = slid_data[1]
+            slid_depth = slid_data[0]
+            dx = spacing / 2
+            sx = x + ((dx - (slid_width / 2)) * direction)
+            path.add_node(sx, y)
+            y += slid_depth
+            path.add_node(sx, y)
+            sx += slid_width * direction
+            path.add_node(sx, y)
+            y -= slid_depth
+            path.add_node(sx, y)
+
         x += (spacing - (thickness / 2.0)) * direction
         path.add_node(x, y)
         y += indent
@@ -125,16 +195,17 @@ def add_text(root, name:str):
     root.groups.append(g)
     t = Text(50, 40, constants.BLACK,   name)
     g.texts.append(t)
-    t = Text(50, 45, constants.RED,     "Red: Cut")
+    t = Text(50, 45, constants.RED,     "Red: Etch")
     g.texts.append(t)
-    t = Text(50, 50, constants.GREEN,   "Green: Cut")
+    t = Text(50, 50, constants.BLUE,    "Blue: Cut")
     g.texts.append(t)
-    t = Text(50, 55, constants.BLUE,    "Blue: Cut")
+    t = Text(50, 55, constants.GREEN,   "Green: Cut")
     g.texts.append(t)
-    t = Text(50, 60, constants.MAGENTA, "Magenta: Etch")
+    t = Text(50, 60, constants.MAGENTA, "Magenta: Cut")
     g.texts.append(t)
 
 def save(root, filename, id, w:int, h:int):
+    print(f"Writing file {filename}")
     with open(filename, "w") as fd:
         header = constants.SVG_START
         header = header.replace("{{FILENAME}}", filename)

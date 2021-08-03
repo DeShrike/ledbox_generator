@@ -1,178 +1,284 @@
 from group import Group
 from path import Path
-from ellipse import Ellipse
 from helpers import *
-from config  import *
+from config  import * 
+from ellipse import Ellipse
 import constants
+from itertools import product
 
 OFFSETX = 10
 OFFSETY = 10
+FLIPXY = True
 
-def add_long_side(root, extra_offset_y:int = 0):
+f1 = (0, 0)
+f2 = (0, 0)
+f3 = (0, 0)
+f4 = (0, 0)
+
+rf1 = (0, 0)
+rf2 = (0, 0)
+rf3 = (0, 0)
+rf4 = (0, 0)
+
+def add_foot_bottom(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
     width = HORIZONTAL_DIVIDER_LENGTH
-    height = DIVIDER_HEIGHT
-    side = Group("long_side")
+    height = distance(rf3, rf4)
+    bottom = Group("foot_bottom")
+    root.groups.append(bottom)
+
+    p = Path("foot_bottom_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
+    bottom.add_path(p)
+
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+
+    d = distance(f3, f4)
+    pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+    spacing = d / pincount
+    o = spacing / 2
+    add_vert_pins(p, p.last_x(), p.last_y() - o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() + o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+
+def add_vent_grid(root, gridsizex, gridsizey, width, height, extra_offset):
+    # Add vent hole grid
+    grid = Group(f"vent_grid_{gridsizex}_{gridsizey}")
+    root.groups.append(grid)
+
+    hh = 4
+    hw = 6 # (width / height) * hh
+    gutter = 3
+    h_extent = (gridsizey * hh) + (gridsizey - 1) * gutter
+    w_extent = (gridsizex * hw) + (gridsizex - 1) * gutter
+    h_offset =  (height - h_extent) / 2
+    w_offset =  (width - w_extent) / 2
+    for x, y in product(range(gridsizex), range(gridsizey)):
+        xx = x * (hw + gutter) + w_offset
+        yy = y * (hh + gutter) + h_offset
+        if (x + y) % 2 == 0:
+            continue
+        hole = create_hole(OFFSETX + xx, OFFSETY + yy, hw, hh, f"vent_hole_{x}_{y}")
+        hole.move(extra_offset)
+        hole.flip_xy = FLIPXY
+        grid.add_path(hole)
+
+def add_foot_top(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    shorten = THICKNESS * 2
+    width = HORIZONTAL_DIVIDER_LENGTH
+    height = distance(f1, rf2) - shorten
+    top = Group("foot_top")
+    root.groups.append(top)
+
+    p = Path("foot_top_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
+    top.add_path(p)
+
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+
+    d = distance(f1, rf2)
+    pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+    spacing = d / pincount
+    o = spacing / 2
+    add_vert_pins(p, p.last_x(), p.last_y() - o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() + o + shorten, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+
+    add_vent_grid(top, 11, 11, width, height, (extra_offset_x + width / 4, extra_offset_y))
+
+def add_back(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    width = HORIZONTAL_DIVIDER_LENGTH
+    height = FOOT_HEIGHT - (2 * THICKNESS)
+    side = Group("back_side")
     root.groups.append(side)
 
-    p = Path("side", True)
-    p.color = constants.RED
+    p = Path("back_side_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
     side.add_path(p)
 
     # top left
-    p.add_node(OFFSETX + 0,     OFFSETY + 0 + extra_offset_y)
-    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, -PIN_WIDTH, PIN_SIZE, 1)
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, -PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # top right
-    p.add_node(OFFSETX + width, OFFSETY + 0 + extra_offset_y)
-    add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, PIN_WIDTH, PIN_SIZE, 1)
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+    add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # bottom right
-    p.add_node(OFFSETX + width, OFFSETY + height + extra_offset_y)
-    add_horz_pins(p, p.last_x() + (GRID_PART_WIDTH / 2) + THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_WIDTH, PIN_SIZE, -1)
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    add_horz_pins(p, p.last_x() + (GRID_PART_WIDTH / 2) + THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, -1)
     
     # bottom left
-    p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
-    add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_WIDTH, PIN_SIZE, -1)
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_OUT_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines")
-    side.groups.append(lines)
+    add_vent_grid(side, 11, 3, width, height, (extra_offset_x, extra_offset_y))
 
-    for xx in range(1, GRID_W):
-        x = xx * (GRID_PART_WIDTH + THICKNESS) - THICKNESS
-        y = 0 + extra_offset_y
-        y2 = DIVIDER_HEIGHT + extra_offset_y
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
-        lines.add_path(l)
-        x += THICKNESS
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
-        lines.add_path(l)
+    # wire hole
+    wire_hole_dia = 8
+    holex = OFFSETX + width - 20 + extra_offset_x
+    holey = OFFSETY + height - 20 + extra_offset_y
+    if FLIPXY:
+        holex, holey = holey, holex
+    e = Ellipse(holex, holey, wire_hole_dia / 2, constants.BLUE)
+    side.add_ellipse(e)
 
-def add_short_side(root, extra_offset_y:int = 0):
-    width = VERTICAL_DIVIDER_LENGTH + (2 * THICKNESS)
+def add_horizontal_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    width = HORIZONTAL_DIVIDER_LENGTH
     height = DIVIDER_HEIGHT
-    side = Group("short_side")
+    side = Group("horizontal_side")
     root.groups.append(side)
 
-    p = Path("side", True)
-    p.color = constants.RED
+    p = Path("horizontal_side_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
     side.add_path(p)
 
     # top left
-    p.add_node(OFFSETX + 0,     OFFSETY + 0 + extra_offset_y)
-    add_horz_pins(p, p.last_x() - (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, -PIN_WIDTH, PIN_SIZE, 1)
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    add_horz_pins(p, p.last_x() - (GRID_PART_WIDTH / 2) - THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, -PIN_OUT_WIDTH, PIN_SIZE, 1)
 
     # top right
-    p.add_node(OFFSETX + width, OFFSETY + 0 + extra_offset_y)
+    p.add_node(OFFSETX + width, OFFSETY + 0)
+    add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    # bottom right
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    add_horz_pins(p, p.last_x() + (GRID_PART_WIDTH / 2) + THICKNESS, p.last_y(), GRID_W, GRID_PART_WIDTH + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, -1)
+    
+    # bottom left
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
+    add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, -PIN_OUT_WIDTH, PIN_SIZE, -1)
+
+    if ADD_SIDE_GUIDELINES:
+        lines = Group("indicatorlines_horizontal_side")
+        side.groups.append(lines)
+
+        for xx in range(1, GRID_W):
+            x = xx * (GRID_PART_WIDTH + THICKNESS) - THICKNESS
+            y = 0
+            y2 = DIVIDER_HEIGHT
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
+            x += THICKNESS
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
+
+def add_vertical_side(root, extra_offset_x:int = 0, extra_offset_y:int = 0):
+    global f1, f2, f3, f4, rf2, rf3, rf4
+    width = VERTICAL_DIVIDER_LENGTH + (2 * THICKNESS)
+    height = DIVIDER_HEIGHT
+    side = Group("vertical_side")
+    root.groups.append(side)
+
+    p = Path("vertical_side_outline", True)
+    p.move((extra_offset_x, extra_offset_y))
+    p.flip_xy = FLIPXY
+    p.color = constants.MAGENTA
+    side.add_path(p)
+
+    # top left
+    p.add_node(OFFSETX + 0,     OFFSETY + 0)
+    pincount = GRID_H if not ADD_FOOT else GRID_H - 2
+    add_horz_pins(p, p.last_x() - (GRID_PART_HEIGHT / 2), p.last_y(), pincount, GRID_PART_HEIGHT + THICKNESS, -PIN_OUT_WIDTH, PIN_SIZE, 1)
+
+    # top right
+    if ADD_FOOT:
+        f1 = (OFFSETX + width - FOOT_HEIGHT, OFFSETY + 0)
+        f2 = (OFFSETX + width - FOOT_HEIGHT, OFFSETY + 0 - FOOT_SIZE)
+        f3 = (OFFSETX + width, OFFSETY + 0 - FOOT_SIZE)
+        f4 = (OFFSETX + width, OFFSETY + 0)
+        r = Rotation(f1[0], f1[1], -FOOT_ANGLE)
+        rf1 = rotate(r, f1[0], f1[1])
+        rf2 = rotate(r, f2[0], f2[1])
+        rf3 = rotate(r, f3[0], f3[1])
+        rf4 = rotate(r, f4[0], f4[1])
+
+        p.add_node(f1[0], f1[1])
+
+        d = distance(f1, rf2)
+        pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+        spacing = d / pincount
+        o = spacing / 2
+        add_vert_pins(p, f1[0], f1[1] + o, pincount, spacing, PIN_OUT_WIDTH, PIN_SIZE, -1, r)
+
+        p.add_node(f2[0], f2[1], r)
+        
+        d = distance(f2, f3)
+
+        add_horz_pins(p, f2[0], f2[1], 1, d / 2, PIN_OUT_WIDTH, PIN_SIZE, 1, r)
+
+        p.add_node(f3[0], f3[1], r)
+
+        d = distance(rf3, rf4)
+        pincount = int((d - PIN_SIZE) / (2 * PIN_SIZE))
+        spacing = d / pincount
+        o = spacing / 2
+        add_vert_pins(p, f3[0], f3[1] - o, pincount, spacing, -PIN_OUT_WIDTH, PIN_SIZE, 1, r)
+
+        p.add_node(f4[0], f4[1], r)
+        p.add_node(f4[0], f4[1])
+    else:
+        p.add_node(OFFSETX + width, OFFSETY + 0)
+    
     add_vert_pins(p, p.last_x(), p.last_y() + (height / 2), 1, 0, -PIN_WIDTH, PIN_SIZE, 1)
 
     # bottom right
-    p.add_node(OFFSETX + width, OFFSETY + height + extra_offset_y)
-    add_horz_pins(p, p.last_x() + (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, PIN_WIDTH, PIN_SIZE, -1)
+    p.add_node(OFFSETX + width, OFFSETY + height)
+    add_horz_pins(p, p.last_x() + (GRID_PART_HEIGHT / 2), p.last_y(), GRID_H, GRID_PART_HEIGHT + THICKNESS, PIN_OUT_WIDTH, PIN_SIZE, -1)
     
     # bottom left
-    p.add_node(OFFSETX + 0,     OFFSETY + height + extra_offset_y)
+    p.add_node(OFFSETX + 0,     OFFSETY + height)
     add_vert_pins(p, p.last_x(), p.last_y() - (height / 2), 1, 0, PIN_WIDTH, PIN_SIZE, -1)
 
-    lines = Group("indicatorlines")
-    side.groups.append(lines)
+    if ADD_SIDE_GUIDELINES:
+        lines = Group("indicatorlines_vertical_side")
+        side.groups.append(lines)
 
-    for xx in range(1, GRID_H):
-        x = xx * (GRID_PART_HEIGHT + THICKNESS)
-        y = 0 + extra_offset_y
-        y2 = DIVIDER_HEIGHT + extra_offset_y
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
-        lines.add_path(l)
-        x += THICKNESS
-        l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
-        lines.add_path(l)
+        for xx in range(1, GRID_H):
+            x = xx * (GRID_PART_HEIGHT + THICKNESS)
+            y = 0
+            y2 = DIVIDER_HEIGHT
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_a_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
+            x += THICKNESS
+            l = create_line(OFFSETY + x, OFFSETY + y, OFFSETX + x, OFFSETY + y2, f"line_b_{xx}")
+            l.move((extra_offset_x, extra_offset_y))
+            l.flip_xy = FLIPXY
+            lines.add_path(l)
 
-def add_button_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
-    dia = 13
-    e = Ellipse(cx, cy, dia / 2, constants.BLUE if cutout else constants.MAGENTA)
-    g.add_ellipse(e)
-
-    if add_wire_holes:
-        e = Ellipse(cx - 2.5, cy - 5, 0.3, constants.BLUE)
-        g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy - 5, 0.3, constants.BLUE)
-        g.add_ellipse(e)
-
-        e = Ellipse(cx - 2.5, cy + 5, 0.3, constants.BLUE)
-        g.add_ellipse(e)
-        e = Ellipse(cx + 2.5, cy + 5, 0.3, constants.BLUE)
-        g.add_ellipse(e)
-
-def add_led_hole(g, cx:float, cy:float, add_wire_holes:bool, cutout:bool):
-    dia = 6
-    e = Ellipse(cx, cy, dia / 2, constants.BLUE if cutout else constants.MAGENTA)
-    g.add_ellipse(e)
-
-    if add_wire_holes:
-        e = Ellipse(cx - 1, cy, 0.2, constants.BLUE)
-        g.add_ellipse(e)
-        e = Ellipse(cx + 1, cy, 0.2, constants.BLUE)
-        g.add_ellipse(e)
-
-def add_circuit_box(root, extra_offset_x:int, extra_offset_y:int):
-    offsetx = OFFSETX + extra_offset_x
-    offsety = OFFSETY + extra_offset_y
-
-    w = 86
-    h = 25
-
-    # Laag 1
-    laag1 = Group("laag1")
-    root.groups.append(laag1)
-
-    rbox = create_rounded_box(offsetx, offsety, w, h, 6)
-    laag1.add_path(rbox)
-
-    lh = add_led_hole(laag1, offsetx + 10, offsety + (h / 2), True, False)
-    lh = add_led_hole(laag1, offsetx + 20, offsety + (h / 2), True, False)
-    lh = add_led_hole(laag1, offsetx + 30, offsety + (h / 2), True, False)
-    lh = add_led_hole(laag1, offsetx + 40, offsety + (h / 2), True, False)
-
-    bh = add_button_hole(laag1, offsetx + 54, offsety + (h / 2), True, False)
-    bh = add_button_hole(laag1, offsetx + 72, offsety + (h / 2), True, False)
-
-    # Laag 2
-    offsety += h + 10
-    laag2 = Group("laag2")
-    root.groups.append(laag2)
-
-    rbox = create_rounded_box(offsetx, offsety, w, h, 6)
-    laag2.add_path(rbox)
-
-    lh = add_led_hole(laag2, offsetx + 10, offsety + (h / 2), False, True)
-    lh = add_led_hole(laag2, offsetx + 20, offsety + (h / 2), False, True)
-    lh = add_led_hole(laag2, offsetx + 30, offsety + (h / 2), False, True)
-    lh = add_led_hole(laag2, offsetx + 40, offsety + (h / 2), False, True)
-
-    bh = add_button_hole(laag2, offsetx + 54, offsety + (h / 2), False, True)
-    bh = add_button_hole(laag2, offsetx + 72, offsety + (h / 2), False, True)
-
-def add_plastic_covers(root, extra_offset_x:int, extra_offset_y:int):
-    offsetx = OFFSETX + extra_offset_x
-    offsety = OFFSETY + extra_offset_y
-
-    plastic = Group(f"plastic_{extra_offset_x}")
-    root.groups.append(plastic)
-
-    w = GRID_PART_WIDTH - 1
-    h = GRID_PART_HEIGHT - 1
-
-    rbox = create_rounded_box(offsetx, offsety, w, h, 1)
-    plastic.add_path(rbox)
 
 def generate_sides(root):
     spacing = BOX_INNER_DEPTH + 10
-    add_long_side(root)
-    add_long_side(root, spacing * 1)
-    add_short_side(root, spacing * 2)
-    add_short_side(root, spacing * 3)
-    add_circuit_box(root, 150, 80)
-    add_plastic_covers(root, 200, 0)
-    add_plastic_covers(root, 200, 40)
-    add_plastic_covers(root, 200, 80)
-    add_plastic_covers(root, 200, 120)
-
+    add_horizontal_side(root, 0, spacing * 0)
+    add_horizontal_side(root, 0, spacing * 1)
+    add_vertical_side(root, 0, spacing * 4)
+    add_vertical_side(root, spacing * 2, spacing * 5)
+    if ADD_FOOT:
+        add_back(root, 0, spacing * 2)
+        add_foot_bottom(root, 0, spacing * 6)
+        add_foot_top(root, 0, spacing * 10.5)

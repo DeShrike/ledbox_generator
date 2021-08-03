@@ -10,8 +10,9 @@ class Group():
 		self.id = id
 
 	def write_to_file(self, fd):
-		if len(self.groups) + len(self.paths) + len(self.texts) == 0:
+		if len(self.groups) + len(self.paths) + len(self.texts) + len(self.ellipses) == 0:
 			return
+		print(f"  Writing Group: {self.id} - {len(self.groups)} groups - {len(self.paths)} paths - {len(self.texts)} texts - {len(self.ellipses)} ellipses")
 		header = constants.GROUP_START
 		header = header.replace("{{ID}}", self.id)
 		fd.write(header)
