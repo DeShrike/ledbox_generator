@@ -280,7 +280,7 @@ def build_object() -> Object3D:
     i.add_roof([1, 2, 13, 14])
     i.add_roof([13, 12, 4, 3, 2])
     i.add_roof([4, 5, 11, 12])
-    i.add_roof([7, 8, 9, 10])
+    i.add_roof([5, 6, 7, 10, 11])
     i.generate(obj)
 
     # island 2
