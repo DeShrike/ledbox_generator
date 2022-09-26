@@ -354,9 +354,56 @@ def build_object() -> Object3D:
 
     return obj
 
+def build_plastic_cover(h) -> Object3D:
+    obj = Object3D()
+
+    width = 29.3333
+    depth = 29.3333
+    height = h
+    corner = 2
+
+    x = 0
+    y = 0
+
+    i = Island("Plastic Cover", elevation = 0, height = height)
+    i.points = [
+
+        # top left
+        IslandPoint((0,      corner),      x, y),
+        IslandPoint((corner,      0),      x, y),
+
+        # top right
+        IslandPoint((width - corner,  0),      x, y),
+        IslandPoint((width,  corner),      x, y),
+
+        # bottom right
+        IslandPoint((width,  depth - corner), x, y),
+        IslandPoint((width - corner,  depth), x, y),
+
+        # bottom left
+        IslandPoint((0 + corner,      depth), x, y),
+        IslandPoint((0,      depth - corner), x, y),
+
+
+        # same as first point
+        IslandPoint((0,      corner),      x, y),
+    ]
+    i.add_roof([1, 2, 3, 4, 5, 6, 7, 8])
+    i.generate(obj)
+
+    return obj
+
+
+
 def main():
     obj = build_object()
     obj.save("ledhelper.obj")
+
+    obj = build_plastic_cover(1)
+    obj.save("plastic_cover_1.obj")
+
+    obj = build_plastic_cover(2)
+    obj.save("plastic_cover_2.obj")
 
 if __name__ == "__main__":
     main()
