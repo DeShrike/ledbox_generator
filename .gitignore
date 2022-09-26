@@ -131,4 +131,6 @@ dmypy.json
 # Misc
 nohup.out
 .vscode
+*.obj
+out
 
